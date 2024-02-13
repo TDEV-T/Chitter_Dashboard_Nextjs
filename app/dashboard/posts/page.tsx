@@ -3,13 +3,14 @@ import { getPostsData } from "@/app/service/data";
 import { Button, Carousel, Image, Modal, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { VideoPlayer } from "../components/VideoPlayer";
+import { PostModel } from "@/app/models/postmodel";
 
 const Page = () => {
   const [open, setOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [media, setMedia] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<PostModel | null>(null);
+  const [media, setMedia] = useState<any | null>(null);
 
-  const showModal = async (record) => {
+  const showModal = async (record: any) => {
     console.log(record);
     await setSelectedPost(record.data);
     await setMedia(record.image);
@@ -27,7 +28,7 @@ const Page = () => {
   const fetchDataPost = async () => {
     const data = await getPostsData();
 
-    const formatPostData = data.map((post) => ({
+    const formatPostData = data.map((post: any) => ({
       key: post.ID,
       pid: post.ID,
       profilepicture: post.User.profilepicture,
@@ -53,7 +54,7 @@ const Page = () => {
       title: "Profile Picture",
       dataIndex: "profilepicture",
       key: "profilepicture",
-      render: (src) => (
+      render: (src: any) => (
         <Image
           src={process.env.NEXT_PUBLIC_BASE_API + "images/" + src}
           alt={src}
@@ -79,7 +80,7 @@ const Page = () => {
     {
       title: "Action",
       key: "action",
-      render: (index, text, record) => (
+      render: (index: any, text: any, record: any) => (
         <Button className="bg-blue-500" onClick={() => showModal(index)}>
           แสดงรายละเอียด
         </Button>
@@ -101,23 +102,26 @@ const Page = () => {
             <div className="bg-white p-8 rounded-lg shadow-md max-w-md dark:bg-gray-600">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-2">
-                  <img
-                    src={
-                      process.env.NEXT_PUBLIC_BASE_API +
-                      "images/" +
-                      selectedPost.User.profilepicture
-                    }
-                    alt="User Avatar"
-                    className="w-8 h-8 rounded-full"
-                  />
+                  {selectedPost && selectedPost.User && (
+                    <img
+                      src={
+                        process.env.NEXT_PUBLIC_BASE_API +
+                        "images/" +
+                        selectedPost.User.profilepicture
+                      }
+                      alt="User Avatar"
+                      className="w-8 h-8 rounded-full"
+                    />
+                  )}
                   <div>
                     <p className="text-gray-800 font-semibold dark:text-white">
-                      {selectedPost.User.username}
+                      {selectedPost.User && selectedPost.User.username}
                     </p>
                     <p className="text-gray-500 text-sm dark:text-gray-100">
-                      {new Date(selectedPost.CreatedAt).toLocaleDateString(
-                        "th-TH"
-                      )}
+                      {selectedPost.CreatedAt &&
+                        new Date(selectedPost.CreatedAt).toLocaleDateString(
+                          "th-TH"
+                        )}
                     </p>
                   </div>
                 </div>
@@ -127,6 +131,7 @@ const Page = () => {
                   {selectedPost.content}
                 </p>
               </div>
+
               <div className="mb-4">
                 {selectedPost != null && selectedPost.User != null ? (
                   <div></div>
@@ -134,11 +139,11 @@ const Page = () => {
                   <></>
                 )}
                 {selectedPost != null &&
-                media != null &&
+                selectedPost.Image != null &&
                 media.length > 1 &&
                 selectedPost.contenttype === "picture" ? (
                   <div className="grid grid-cols-2 gap-4">
-                    {media.map((img, index) => (
+                    {media.map((img: any, index: any) => (
                       <div key={index}>
                         <Image
                           src={
@@ -176,7 +181,12 @@ const Page = () => {
                     >
                       <path d="M12 21.35l-1.45-1.32C6.11 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-4.11 6.86-8.55 11.54L12 21.35z" />
                     </svg>
-                    <span>{selectedPost.Likes.length} Likes</span>
+                    <span>
+                      {selectedPost.Likes != null
+                        ? selectedPost.Likes.length
+                        : 0}{" "}
+                      Likes
+                    </span>
                   </button>
                 </div>
                 <button className="flex justify-center items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1  dark:text-white">
@@ -202,7 +212,10 @@ const Page = () => {
                     </g>
                   </svg>
                   <span className="dark:text-white">
-                    {selectedPost.Comments.length} Comment
+                    {selectedPost.Comments != null
+                      ? selectedPost.Comments.length
+                      : 0}{" "}
+                    Comment
                   </span>
                 </button>
               </div>
@@ -212,29 +225,32 @@ const Page = () => {
 
               {selectedPost.Comments != null ? (
                 <>
-                  {selectedPost.Comments.map((comment, index) => (
-                    <div className="mt-4">
-                      <div className="flex items-center space-x-2">
-                        <img
-                          src={
-                            process.env.NEXT_PUBLIC_BASE_API +
-                            "images/" +
-                            comment.User.profilepicture
-                          }
-                          alt="User Avatar"
-                          className="w-6 h-6 rounded-full"
-                        />
-                        <div>
-                          <p className="text-gray-800 font-semibold  dark:text-white">
-                            {comment.User.username}
-                          </p>
-                          <p className="text-gray-500 text-sm  dark:text-white">
-                            {comment.content}
-                          </p>
+                  {selectedPost.Comments.map(
+                    (comment, index) =>
+                      comment.User && (
+                        <div className="mt-4" key={index}>
+                          <div className="flex items-center space-x-2">
+                            <img
+                              src={
+                                process.env.NEXT_PUBLIC_BASE_API +
+                                "images/" +
+                                comment.User.profilepicture
+                              }
+                              alt="User Avatar"
+                              className="w-6 h-6 rounded-full"
+                            />
+                            <div>
+                              <p className="text-gray-800 font-semibold  dark:text-white">
+                                {comment.User.username}
+                              </p>
+                              <p className="text-gray-500 text-sm  dark:text-white">
+                                {comment.content}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      )
+                  )}
                 </>
               ) : (
                 <></>

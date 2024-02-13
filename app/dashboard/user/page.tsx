@@ -11,7 +11,7 @@ const Page = () => {
       title: "Profile Picture",
       dataIndex: "profilepicture",
       key: "profilepicture",
-      render: (src) => (
+      render: (src:any) => (
         <Image src={process.env.NEXT_PUBLIC_BASE_API+'images/'+src} alt={src} width={50} />
       ),
     },
@@ -38,7 +38,7 @@ const Page = () => {
 
     if (data != null) {
       console.log(data);
-      const formatData = data.map((user) => ({
+      const formatData = data.map((user:any) => ({
         key: user.ID,
         profilepicture: user.profilepicture,
         name: user.fullname,
