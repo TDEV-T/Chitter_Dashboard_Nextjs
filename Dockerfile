@@ -2,7 +2,7 @@ FROM node:current-alpine
 
 WORKDIR /app
 
-COPY pagekage.json . 
+COPY package.json . 
 
 RUN npm i
 
