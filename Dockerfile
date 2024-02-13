@@ -2,6 +2,8 @@ FROM node:current-alpine
 
 WORKDIR /app
 
-COPY . . 
+COPY pagekage.json . 
+
+RUN npm i
 
 CMD ["npm" , "run" , "production"]
