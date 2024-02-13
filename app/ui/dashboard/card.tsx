@@ -1,9 +1,12 @@
+"use client";
+import { getStatsData } from "@/app/service/data";
 import {
   CommentOutlined,
   FileOutlined,
   LikeOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
 const iconMap = {
   user_count: UserOutlined,
@@ -12,13 +15,28 @@ const iconMap = {
   comment_count: CommentOutlined,
 };
 
-export default async function CardWraper() {
+export default function CardWraper() {
+  const [data, setData] = useState({
+    User: 0,
+    Comment: 0,
+    Post: 0,
+    Like: 0,
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await getStatsData();
+    setData(data);
+  };
   return (
     <>
-      <Card title="User in System" value={20} type="user_count" />
-      <Card title="Post in System" value={30} type="post_count" />
-      <Card title="Like in System" value={40} type="like_count" />
-      <Card title="Comment in System" value={40} type="comment_count" />
+      <Card title="User in System" value={data!.User} type="user_count" />
+      <Card title="Post in System" value={data!.Post} type="post_count" />
+      <Card title="Like in System" value={data!.Like} type="like_count" />
+      <Card title="Comment in System" value={data!.Post} type="comment_count" />
     </>
   );
 }

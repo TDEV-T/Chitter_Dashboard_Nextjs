@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "production" : "next build && next start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.0",
@@ -17,7 +18,8 @@
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-player": "^2.14.1"
   },
   "devDependencies": {
     "@types/node": "^20",

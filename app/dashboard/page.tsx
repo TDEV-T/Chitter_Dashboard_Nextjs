@@ -1,7 +1,17 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import CardWraper from "../ui/dashboard/card";
+import { getStatsData } from "../service/data";
 
-const page = () => {
+const Page = () => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const { Comment, Like, Post, User } = await getStatsData();
+  };
+
   return (
     <>
       <main>
@@ -15,4 +25,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
