@@ -140,7 +140,7 @@ const Page = () => {
                 )}
                 {selectedPost != null &&
                 selectedPost.Image != null &&
-                media.length > 1 &&
+                media  != null && media.length > 1 &&
                 selectedPost.contenttype === "picture" ? (
                   <div className="grid grid-cols-2 gap-4">
                     {media.map((img: any, index: any) => (
